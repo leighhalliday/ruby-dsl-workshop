@@ -1,8 +1,9 @@
 # Ruby DSL Presentation
-## Creating by Leigh Halliday
+## Created by Leigh Halliday
 [www.leighhalliday.com](http://www.leighhalliday.com)
 
-Examples can be found inside the examples folder.
+## Examples
+Found inside the examples folder.
 
 ## Instructions to view presentation
 1. Install [Node.js](http://nodejs.org/)
