@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>Ruby DSLs - Leigh Halliday</title>
+
+		<meta name="description" content="Creating a Ruby DSL.">
+		<meta name="author" content="Leigh Halliday">
+
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Code syntax highlighting -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+		<style>
+		  .reveal section img {
+		  	border: 0px;
+		  	background: none;
+		  }
+		</style>
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+				<section>
+					<h1>Building a DSL</h1>
+					<h3>Leigh Halliday</h3>
+					<img src="https://www.flipgive.com/assets/merchants/flipgive_fundraising-9b276fa3fe08d2a4d40a8312b63bfc1e.png" />
+				</section>
+
+				<section data-markdown>
+					# Tonight's Agenda
+					- Definition
+					- Where you've seen them
+					- Blocks & example
+					- Simple router
+					- Your turn
+				</section>
+
+				<section>
+					<h1>What is a DSL?</h1>
+
+					<blockquote>A domain-specific language (DSL) is a computer language specialized to a particular application domain. This is in contrast to a general-purpose language (GPL), which is broadly applicable across domains, and lacks specialized features for a particular domain.</blockquote>
+
+					<p>In other words... it's like a mini game, like raising Chocobos in Final Fantasy 7.</p>
+				</section>
+
+				<section>
+					<section>
+						<h1>You've Probably Used Them</h1>
+					</section>
+					<section data-markdown>
+						## Rails Routes
+						```ruby
+						Rails.application.routes.draw do
+						  root 'pages#home'
+						  resources :pages, only: [:index, :show]
+						end
+						```
+					</section>
+					<section data-markdown>
+						## RSpec
+						```ruby
+						describe Array do
+						  describe "includes_subset?" do
+						    it "finds subsets" do
+						      a = [1,2,3,4,5]
+						      b = [1,2]
+						      expect(a.includes_subset?(b)).to eq(true)
+						    end
+						  end
+						end
+						```
+					</section>
+					<section data-markdown>
+						## Rake Tasks
+						```ruby
+						namespace :backup do
+						  desc "Backup assets"
+						  task :assets => :environment do
+						    tar_assets
+						  end
+						end
+						```
+					</section>
+					<section data-markdown>
+						## Capistrano
+						```ruby
+						role :app, %w{deploy@localhost}
+
+						server 'localhost',
+						  user: 'deploy',
+						  roles: %w{app},
+						  ssh_options: {
+						    keys: %w(/home/deploy/.ssh/id_rsa),
+						    auth_methods: 'publickey'
+						  }
+						```
+					</section>
+					<section>
+						<h2>DB Migrations</h2>
+						<pre><code class="ruby" data-trim>
+class CreateUploads < ActiveRecord::Migration
+  def change
+    create_table :uploads do |t|
+      t.string :name
+      t.attachment :file
+      t.timestamps
+    end
+  end
+end
+						</code></pre>
+					</section>
+				</section>
+
+				<section>
+					<section>
+						<h1>DSL Building Blocks</h1>
+					</section>
+					<section data-markdown>
+						## Blocks & Lambdas
+						```ruby
+						[1,2,3].collect do |num|
+						  num * 2
+						end
+
+						double = ->(num) {
+						  num * 2
+						}
+						p double.call(5)
+						```
+					</section>
+					<section data-markdown>
+						## Passing Blocks
+						```ruby
+						[1,2,3].collect do |num|
+						  num * 2
+						end
+						```
+						This block of code was passed to the `collect` method.
+					</section>
+					<section data-markdown>
+						## Receiving Blocks
+						```ruby
+						class Array
+						  def each
+						    array_size = self.size - 1
+						    for i in 0..array_size
+						      yield self[i]
+						    end
+						  end
+						end
+						```
+						To call the block you can use the `yield` method.
+					</section>
+					<section data-markdown>
+						## Receiving Named Blocks
+						```ruby
+						class Array
+						  def each(&block)
+						    array_size = self.size - 1
+						    for i in 0..array_size
+						      block.call self[i]
+						    end
+						  end
+						end
+						```
+						`&block` allows us to give this block a name.
+					</section>
+					<section data-markdown>
+						## Block Context
+						```ruby
+class Dummy
+  def print_name(&block)
+    @text = "Inside"
+    block.call
+    instance_eval(&block)
+  end
+end
+
+@text = "Outside"
+Dummy.new.print_name do
+  puts @text
+end
+
+# Outside
+# Inside
+						```
+					</section>
+					<section data-markdown>
+						## Array Example
+					</section>
+
+				</section>
+
+				<section>
+					<h1>Our First DSL</h1>
+					<h3>Building a Simple Router</h3>
+				</section>
+
+				<section>
+					<h1>Your Turn!</h1>
+				</section>
+
+				<section data-markdown>
+					<script type="text/template">
+					##### Our Input
+					```
+					output = FancyMarkup.new.html do
+					  body do
+					    div id: "container" do
+					      ul class: "pretty" do
+					        li "Item 1", class: :active
+					        li "Item 2"
+					      end
+					    end
+					  end
+					end
+					```
+					#### Our Output
+					```
+					<html>
+					  <body>
+					    <div id="container">
+					      <ul class="pretty">
+					        <li class="active">Item 1</li>
+					        <li>Item 2</li>
+					      </ul>
+					    </div>
+					  </body>
+					</html>
+					```
+					</script>
+				</section>
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// Full list of configuration options available at:
+			// https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// Optional reveal.js plugins
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: false, condition: function() { return !!document.querySelector( 'pre code' ); }, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>
