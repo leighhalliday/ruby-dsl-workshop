@@ -53,21 +53,28 @@
 					<img src="images/flipgive.png" />
 				</section>
 
-				<section data-markdown>
-					# Tonight's Agenda
-					- Definition
-					- Where you've seen them
-					- Blocks & example
-					- Simple router
-					- Your turn
+				<section id="fragments">
+					<h1>Tonight's Agenda</h1>
+					<ul>
+						<li class="fragment">What is a DSL?</li>
+						<li class="fragment">Where have you seen them?</li>
+						<li class="fragment">Blocks &amp; examples</li>
+						<li class="fragment">Building a simple router</li>
+						<li class="fragment">Your turn</li>
+					</ul>
 				</section>
 
 				<section>
-					<h1>What is a DSL?</h1>
-
-					<blockquote>A domain-specific language (DSL) is a computer language specialized to a particular application domain. This is in contrast to a general-purpose language (GPL), which is broadly applicable across domains, and lacks specialized features for a particular domain.</blockquote>
-
-					<p>In other words... it's like a mini game, like raising Chocobos in Final Fantasy 7.</p>
+					<section>
+						<h1>What is a DSL?</h1>
+					</section>
+					<section>
+						<blockquote>A domain-specific language (DSL) is a computer language specialized to a particular application domain. This is in contrast to a general-purpose language (GPL), which is broadly applicable across domains, and lacks specialized features for a particular domain.</blockquote>
+					</section>
+					<section>
+						<blockquote>A programming language of limited expressiveness focused on a particular domain.</blockquote>
+						<p>tl;dr - Like raising Chocobos in Final Fantasy 7.</p>
+					</section>
 				</section>
 
 				<section>
@@ -135,6 +142,18 @@ class CreateUploads < ActiveRecord::Migration
   end
 end
 						</code></pre>
+					</section>
+					<section data-markdown>
+						## Factory Girl
+						```ruby
+						FactoryGirl.define do
+							factory :user do
+								first_name "Foo"
+								last_name "Bar"
+						    sequence( :email ) { | n | "foo#{n}@example.com" }
+							end
+						end
+						```
 					</section>
 				</section>
 
